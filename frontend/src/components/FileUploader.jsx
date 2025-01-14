@@ -20,7 +20,7 @@ function FileUploader({ onFileUpload }) {
     formData.append('file', file);
 
     try {
-      const response = await api.post('/upload', formData, {
+      const response = await api.post('/upload/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

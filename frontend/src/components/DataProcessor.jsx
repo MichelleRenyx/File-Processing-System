@@ -8,4 +8,6 @@ function DataProcessor({ htmlData }) {
       <div dangerouslySetInnerHTML={{ __html: htmlData }} />
   );
 }
+
+
 export default DataProcessor;

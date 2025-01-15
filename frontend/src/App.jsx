@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import FileUploader from './components/FileUploader';
 import DataProcessor from './components/DataProcessor';
 import PatternInput from './components/PatternInput';
+import DownloadComponent from './components/DownloadComponent';
 import './styles/App.css';
 
 function App() {
@@ -14,8 +15,13 @@ function App() {
     setFileData(responseData.data); // save the file data for pattern processing
   };
 
-  const handleProcessData = processedData => {
-    setProcessedHtmlData(processedData.data); // Update HTML data with processed results
+  const handleProcessData = processedHtmlData => {
+    setProcessedHtmlData(processedHtmlData); // Update HTML data with processed results
+  };
+
+  const handleDownload = formatType => {
+    const url = `http://127.0.0.1:8000/download/${formatType}/`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -33,6 +39,7 @@ function App() {
           <>
             <h2>Processed Data</h2>
             <DataProcessor htmlData={processedHtmlData} /> {/* Display the processed data */}
+            <DownloadComponent onDownload={handleDownload} /> {/* Allows downloading processed data in CSV or Excel */}
           </>
         )}
     </div>

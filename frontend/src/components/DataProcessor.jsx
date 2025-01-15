@@ -1,4 +1,4 @@
-// Responsible for processing uploaded data display and pattern matching replacement functions.
+// Responsible for processing uploaded data display.
 
 import React from 'react';
 

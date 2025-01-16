@@ -13,3 +13,5 @@ openpyxl
 spacy
 lxml
 html5lib
+boto3
+django-storages

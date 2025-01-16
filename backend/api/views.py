@@ -7,9 +7,11 @@ import pandas as pd
 from io import StringIO
 from io import BytesIO
 import spacy
-from django.http import HttpResponse
-import tempfile
+from botocore.exceptions import ClientError
 import os
+import uuid
+import boto3
+from django.conf import settings
 
 nlp = spacy.load('en_core_web_sm')
 
@@ -70,10 +72,6 @@ class ProcessDataView(views.APIView):
         regex_pattern = regex_patterns.get(patterns[0], '')
         replacement = replacements.get(actions[0], '')
 
-        # Convert the string data back to DataFrame
-        # html_data = StringIO(file_data)
-        # df = pd.read_html(html_data)[0]
-
         # Apply regex to the DataFrame if applicable
         if regex_pattern and replacement:
             df.replace(regex_pattern, replacement, regex=True, inplace=True)
@@ -81,64 +79,42 @@ class ProcessDataView(views.APIView):
         # Convert modified DataFrame back to HTML
         updated_html = df.to_html(classes='table table-bordered')
 
-        # Temporarily save data to file for download
-        temp_dir = tempfile.mkdtemp()
-        csv_file_path = os.path.join(temp_dir, "data.csv")
-        excel_file_path = os.path.join(temp_dir, "data.xlsx")
-        
-        df.to_csv(csv_file_path, index=False)
-        df.to_excel(excel_file_path, index=False, engine='openpyxl')
-        
-        return Response({'html_data': updated_html, 'csv_file_path': csv_file_path, 'excel_file_path': excel_file_path}, status=status.HTTP_200_OK)
+        # Upload to S3
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_S3_REGION_NAME
+        )
+        csv_buffer = BytesIO()
+        df.to_csv(csv_buffer, index=False)
+        csv_buffer.seek(0)
+
+        unique_id = str(uuid.uuid4())
+        csv_key = f"{unique_id}.csv"
+        s3_client.upload_fileobj(csv_buffer, settings.AWS_STORAGE_BUCKET_NAME, csv_key)
+
+        # Generate presigned URL for download
+        response_url = s3_client.generate_presigned_url('get_object', Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': csv_key}, ExpiresIn=3600)
+        return Response({'html_data': updated_html, 'download_url': response_url}, status=status.HTTP_200_OK)
     
 class DownloadProcessedData(views.APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request, file_path):
-        if os.path.exists(file_path):
-            with open(file_path, 'rb') as f:
-                file_type = 'text/csv' if file_path.endswith('.csv') else 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                response = HttpResponse(f.read(), content_type=file_type)
-                response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
-                return response
-        else:
-            return Response({'error': 'File not found'}, status=status.HTTP_404_NOT_FOUND)
+    def get(self, request, id):
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_S3_REGION_NAME
+        )
 
-        
-# class DownloadProcessedData(views.APIView):
-#     permission_classes = [AllowAny]
-
-#     def get(self, request, format_type):
-#         data = request.session.get('processed_data')
-#         if not data:
-#             return Response({'error': 'No processed data available'}, status=status.HTTP_404_NOT_FOUND)
-
-#         df = pd.DataFrame(data)
-#         if format_type == 'csv':
-#             response = HttpResponse(content_type='text/csv')
-#             response['Content-Disposition'] = 'attachment; filename="processed_data.csv"'
-#             df.to_csv(path_or_buf=response, index=False)
-#         elif format_type == 'xlsx':
-#             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-#             response['Content-Disposition'] = 'attachment; filename="processed_data.xlsx"'
-#             with pd.ExcelWriter(response) as writer:
-#                 df.to_excel(writer, index=False)
-
-#         return response
-    
-#     def download_csv(request):
-#     # This is a placeholder function, you need to adapt it to your actual data handling logic
-#         data = Document.objects.all().to_dataframe()  # Assuming using Django Pandas for DataFrame
-#         response = HttpResponse(content_type='text/csv')
-#         response['Content-Disposition'] = 'attachment; filename="processed_data.csv"'
-#         data.to_csv(path_or_buf=response, index=False)
-#         return response
-
-
-
-#     def download_excel(request):
-#         data = Document.objects.all().to_dataframe()  # Assuming using Django Pandas for DataFrame
-#         response = HttpResponse(content_type='application/vnd.ms-excel')
-#         response['Content-Disposition'] = 'attachment; filename="processed_data.xlsx"'
-#         data.to_excel(excel_writer=response, index=False)
-#         return response
+        # Generate presigned URL
+        try:
+            response = s3_client.generate_presigned_url('get_object',
+                                                        Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
+                                                                'Key': id},
+                                                        ExpiresIn=3600)  # URL expires in 1 hour
+            return Response({'url': response}, status=status.HTTP_200_OK)
+        except ClientError as e:
+            return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)

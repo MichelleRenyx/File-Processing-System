@@ -33,9 +33,18 @@ function FileUploader({ onFileUpload }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="file" onChange={handleFileChange} />
-      <button type="submit">Upload File</button>
+    <form onSubmit={handleSubmit} className="flex justify-center items-center space-x-4 mt-4">
+      <input 
+        type="file" 
+        onChange={handleFileChange} 
+        className="p-2 border border-gray-300 rounded-md" 
+      />
+      <button 
+        type="submit" 
+        className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 transition-colors"
+      >
+        Upload File
+      </button>
     </form>
   );
 }

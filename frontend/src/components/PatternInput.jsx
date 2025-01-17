@@ -24,14 +24,20 @@ function PatternInput({ fileData, onProcessData }) {
   };
 
   return (
-    <div>
+    <div className="mt-4">
       <input
         type="text"
         placeholder="Describe what you want to find and replace"
         value={patternDescription}
         onChange={e => setPatternDescription(e.target.value)}
+        className="p-2 border border-gray-300 rounded-md w-64"
       />
-      <button onClick={handleProcess}>Process Data</button>
+      <button 
+        onClick={handleProcess} 
+        className="ml-2 p-2 bg-green-500 text-white rounded-md hover:bg-green-700 transition-colors"
+      >
+        Process Data
+      </button>
     </div>
   );
 }

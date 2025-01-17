@@ -3,7 +3,7 @@ import FileUploader from './components/FileUploader';
 import DataProcessor from './components/DataProcessor';
 import PatternInput from './components/PatternInput';
 import DownloadComponent from './components/DownloadComponent';
-import './styles/App.css';
+// import './styles/App.css';
 
 function App() {
   const [htmlData, setHtmlData] = useState('');
@@ -30,28 +30,26 @@ function App() {
     }
   };
   
-
 return (
-  <div className="App">
-      <h1>Upload and Process Files</h1>
-      <FileUploader onFileUpload={handleFileUpload} />
-      {htmlData && (
-        <>
-          <h2>Original Data</h2>
-          <DataProcessor htmlData={htmlData} /> {/* Display the original uploaded data */}
-        </>
-      )}
-      {fileData && <PatternInput fileData={fileData} onProcessData={handleProcessData} />}
-      {processedHtmlData && (
-        <>
-          <h2>Processed Data</h2>
-          <DataProcessor htmlData={processedHtmlData} /> {/* Display the processed data */}
-          <DownloadComponent onDownload={handleDownload} />
-        </>
-      )}
+  <div className="App p-6 text-center bg-gray-100">
+    <h1 className="text-2xl font-bold mb-4">Upload and Process Files</h1>
+    <FileUploader onFileUpload={handleFileUpload} />
+    {htmlData && (
+      <>
+        <h2 className="text-xl font-semibold mt-6">Original Data</h2>
+        <DataProcessor htmlData={htmlData} />
+      </>
+    )}
+    {fileData && <PatternInput fileData={fileData} onProcessData={handleProcessData} />}
+    {processedHtmlData && (
+      <>
+        <h2 className="text-xl font-semibold mt-6">Processed Data</h2>
+        <DataProcessor htmlData={processedHtmlData} />
+        <DownloadComponent onDownload={handleDownload} />
+      </>
+    )}
   </div>
 );
-
 }
 
 export default App;

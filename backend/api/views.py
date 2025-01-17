@@ -37,7 +37,7 @@ class DocumentUploadView(views.APIView):
             file_instance.save()  # update file_instance
 
             # Convert DataFrame to HTML
-            html_data = df.to_html(classes='table table-bordered')
+            html_data = df.to_html(classes='table table-bordered', index=False) # index=False to exclude row numbers
             return Response({'data': html_data}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

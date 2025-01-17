@@ -27,10 +27,10 @@ function PatternInput({ fileData, onProcessData }) {
     <div className="mt-4">
       <input
         type="text"
-        placeholder="Describe what you want to find and replace"
+        placeholder="Describe your need for data processing."
         value={patternDescription}
         onChange={e => setPatternDescription(e.target.value)}
-        className="p-2 border border-gray-300 rounded-md w-64"
+        className="p-2 border bg-black border-gray-300 rounded-md w-80"
       />
       <button 
         onClick={handleProcess} 

@@ -3,7 +3,7 @@ import FileUploader from './components/FileUploader';
 import DataProcessor from './components/DataProcessor';
 import PatternInput from './components/PatternInput';
 import DownloadComponent from './components/DownloadComponent';
-// import './styles/App.css';
+import './styles/App.css';
 
 function App() {
   const [htmlData, setHtmlData] = useState('');
@@ -30,24 +30,46 @@ function App() {
     }
   };
   
+  
 return (
-  <div className="App p-6 text-center bg-gray-100">
-    <h1 className="text-2xl font-bold mb-4">Upload and Process Files</h1>
+  <div className="App bg-gradient-to-r from-blue-800 via-blue-600 to-blue-500  min-h-screen p-6 text-center text-white">
+    <h1 className="text-4xl font-bold mb-6">
+      Hands Off <span className="text-teal-300"><span className="typing-effect-wrapper"><span className="typing-effect">Data Processment</span></span></span>
+    </h1>
+    <p className="text-xl mb-8">
+      Say goodbye to data chaos and hello to precision with our AI-powered data
+      cleaning platform.
+    </p>
+
     <FileUploader onFileUpload={handleFileUpload} />
+
     {htmlData && (
       <>
-        <h2 className="text-xl font-semibold mt-6">Original Data</h2>
+        <h2 className="text-2xl font-semibold mt-6">Original Data</h2>
         <DataProcessor htmlData={htmlData} />
       </>
     )}
+
     {fileData && <PatternInput fileData={fileData} onProcessData={handleProcessData} />}
+
     {processedHtmlData && (
       <>
-        <h2 className="text-xl font-semibold mt-6">Processed Data</h2>
+        <h2 className="text-2xl font-semibold mt-6">Processed Data</h2>
         <DataProcessor htmlData={processedHtmlData} />
-        <DownloadComponent onDownload={handleDownload} />
+        <div className="mt-6">
+          <DownloadComponent onDownload={handleDownload} />
+        </div>
       </>
     )}
+
+    <div className="fixed inset-x-0 bottom-0 bg-blue-800 p-6 text-center text-white rounded-lg shadow-lg">
+      <h2 className="text-3xl font-semibold mb-4">No-Code Platform</h2>
+      <p className="text-lg">
+        Transform raw, messy data into clean, high-quality datasets without
+        writing a single line of code. Run various transformation modules and
+        obtain analytics-ready formats.
+      </p>
+    </div>
   </div>
 );
 }

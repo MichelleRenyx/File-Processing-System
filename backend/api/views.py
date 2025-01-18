@@ -1,3 +1,4 @@
+from openai import OpenAI
 from rest_framework import views, status
 from rest_framework.response import Response
 from .models import Document
@@ -6,14 +7,13 @@ from rest_framework.permissions import AllowAny
 import pandas as pd
 from io import StringIO
 from io import BytesIO
-import spacy
 from botocore.exceptions import ClientError
 import os
 import uuid
 import boto3
 from django.conf import settings
 
-nlp = spacy.load('en_core_web_sm')
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", settings.OPENAI_API_KEY))
 
 class DocumentUploadView(views.APIView):
     permission_classes = [AllowAny]
@@ -42,7 +42,7 @@ class DocumentUploadView(views.APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-
+    
 class ProcessDataView(views.APIView):
     permission_classes = [AllowAny]
 
@@ -54,30 +54,29 @@ class ProcessDataView(views.APIView):
         if not pattern_description or not file_data:
             return Response({'error': 'Missing pattern description or file data'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Convert file data from HTML back to DataFrame
+        # Call OpenAI API with HTML and natural language description
         try:
-            df = pd.read_html(StringIO(file_data))[0]
+            chat_completion = client.chat.completions.create(
+                messages=[
+                    {"role": "system", "content": "You are an intelligent assistant. Please edit the HTML data based on the instructions provided and return only the modified HTML."},
+                    {"role": "user", "content": f"Here is the HTML table: {file_data}"},
+                    {"role": "user", "content": f"Instruction: {pattern_description} Edit this HTML as per these instructions and return only the HTML code without any additional text or comments."}
+                ],
+                model="gpt-4o-mini"  # use the gpt-4o-mini model
+            )
+            modified_html = chat_completion.choices[0].message.content.strip()
+            
         except Exception as e:
-            return Response({'error': f'Error processing HTML data: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
+            print("Error with OpenAI API: ", str(e))
+            return Response({'error': f'Error with OpenAI API: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # Analyze the description to extract patterns and intended replacements
-        doc = nlp(pattern_description)
-        # Example: find patterns such as 'email', 'name', etc., and determine actions like 'redact', 'replace'
-        patterns = [token.lemma_ for token in doc if token.pos_ in ['NOUN', 'PROPN']]
-        actions = [token.lemma_ for token in doc if token.pos_ == 'VERB']
-        # Simplistic NLP logic to determine regex pattern and replacement
-        regex_patterns = { 'email': r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,7}\b', 'name': r'\b[A-Za-z]+\b' }
-        replacements = { 'redact': 'REDACTED', 'replace': 'REPLACED' }
 
-        regex_pattern = regex_patterns.get(patterns[0], '')
-        replacement = replacements.get(actions[0], '')
-
-        # Apply regex to the DataFrame if applicable
-        if regex_pattern and replacement:
-            df.replace(regex_pattern, replacement, regex=True, inplace=True)
-
-        # Convert modified DataFrame back to HTML
-        updated_html = df.to_html(classes='table table-bordered')
+        # Convert modified HTML back to DataFrame
+        try:
+            modified_df = pd.read_html(StringIO(modified_html))[0]
+        except Exception as e:
+            print("Error processing modified HTML to DataFrame: ", str(e))
+            return Response({'error': f'Error processing modified HTML to DataFrame: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # Upload to S3
         s3_client = boto3.client(
@@ -87,7 +86,7 @@ class ProcessDataView(views.APIView):
             region_name=settings.AWS_S3_REGION_NAME
         )
         csv_buffer = BytesIO()
-        df.to_csv(csv_buffer, index=False)
+        modified_df.to_csv(csv_buffer, index=False)
         csv_buffer.seek(0)
 
         unique_id = str(uuid.uuid4())
@@ -96,7 +95,7 @@ class ProcessDataView(views.APIView):
 
         # Generate presigned URL for download
         response_url = s3_client.generate_presigned_url('get_object', Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': csv_key}, ExpiresIn=3600)
-        return Response({'html_data': updated_html, 'download_url': response_url}, status=status.HTTP_200_OK)
+        return Response({'html_data': modified_html, 'download_url': response_url}, status=status.HTTP_200_OK)
     
 class DownloadProcessedData(views.APIView):
     permission_classes = [AllowAny]

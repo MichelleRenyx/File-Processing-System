@@ -32,7 +32,7 @@ function App() {
   
   
 return (
-  <div className="App bg-gradient-to-r from-blue-800 via-blue-600 to-blue-500  min-h-screen p-6 text-center text-white">
+  <div className="App bg-gradient-to-r from-blue-800 via-blue-600 to-blue-500  min-h-screen p-6 text-center text-white overflow-y-auto">
     <h1 className="text-4xl font-bold mb-6">
       Hands Off <span className="text-teal-300"><span className="typing-effect-wrapper"><span className="typing-effect">Data Processment</span></span></span>
     </h1>
@@ -62,7 +62,7 @@ return (
       </>
     )}
 
-    <div className="fixed inset-x-0 bottom-0 bg-blue-800 p-6 text-center text-white rounded-lg shadow-lg">
+    <div className="bg-blue-800 p-6 text-center text-white rounded-lg shadow-lg mt-6">
       <h2 className="text-3xl font-semibold mb-4">No-Code Platform</h2>
       <p className="text-lg">
         Transform raw, messy data into clean, high-quality datasets without

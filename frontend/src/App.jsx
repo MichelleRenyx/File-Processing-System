@@ -32,7 +32,7 @@ function App() {
   
   
 return (
-  <div className="App bg-gradient-to-r from-blue-800 via-blue-600 to-blue-500  min-h-screen p-6 text-center text-white overflow-y-auto">
+  <div className="App bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700  min-h-screen p-6 text-center text-white overflow-y-auto">
     <h1 className="text-4xl font-bold mb-6">
       Hands Off <span className="text-teal-300"><span className="typing-effect-wrapper"><span className="typing-effect">Data Processment</span></span></span>
     </h1>

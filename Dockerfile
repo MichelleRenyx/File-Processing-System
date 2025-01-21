@@ -24,8 +24,6 @@ WORKDIR /code
 
 #Copy Django project to the container
 COPY ./backend/fileprocessor/ /code/backend/fileprocessor/
-# Copy the .env file to the container
-COPY ./backend/fileprocessor/.env /code/backend/fileprocessor/.env
 
 RUN pip install -r ./backend/fileprocessor/requirements.txt
 
@@ -33,6 +31,10 @@ RUN pip install -r ./backend/fileprocessor/requirements.txt
 COPY --from=build-stage /code/frontend/dist /code/backend/fileprocessor/static/
 COPY --from=build-stage /code/frontend/dist/assets /code/backend/fileprocessor/static/
 COPY --from=build-stage /code/frontend/dist/index.html /code/backend/fileprocessor/backend/templates/index.html
+
+# Use ARG to pass the environment variable for OpenAI API key
+ARG OPENAI_API_KEY
+ENV OPENAI_API_KEY=${OPENAI_API_KEY}
 
 #Run Django Migration Commands
 RUN python3 ./backend/fileprocessor/manage.py migrate

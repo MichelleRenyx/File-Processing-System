@@ -31,6 +31,47 @@ jobs:
           cd frontend
           npm test -- --ci --watchAll=false
 
+  docker-build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        run : |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-fileprocessor:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/backend-fileprocessor:latest
+
+      - name: Set up SSH
+        run : |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_EC2_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.AWS_EC2_IP }} >> ~/.ssh/known_hosts
+      
+      - name: Deploy to AWS EC2
+        run : |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@${{ secrets.AWS_EC2_IP }} << 'EOF'
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fileprocessor:latest
+            docker stop backend-fileprocessor || true
+            docker rm backend-fileprocessor || true
+            docker run -d -name backend-fileprocessor -p 80:8000 ${{ secrets.DOCKER_USERNAME }}/backend-fileprocessor:latest
+          EOF
+        
+        
+        
+        
       # - name: Build project
       #   run: |
       #     npm run build  # 构建 React 项目

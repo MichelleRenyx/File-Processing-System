@@ -28,9 +28,9 @@ COPY ./backend/fileprocessor/ /code/backend/fileprocessor/
 RUN pip install -r ./backend/fileprocessor/requirements.txt
 
 #Copy the frontend build to the container
-COPY --from=build-stage /code/frontend/build /code/backend/fileprocessor/static/
-COPY --from=build-stage /code/frontend/build/static /code/backend/fileprocessor/static/
-COPY --from=build-stage /code/frontend/build/index.html /code/backend/fileprocessor/backend/templates/index.html
+COPY --from=build-stage /code/frontend/dist /code/backend/fileprocessor/static/
+COPY --from=build-stage /code/frontend/dist/static /code/backend/fileprocessor/static/
+COPY --from=build-stage /code/frontend/dist/index.html /code/backend/fileprocessor/backend/templates/index.html
 
 #Run Django Migration Commands
 RUN python3 ./backend/fileprocessor/manage.py migrate

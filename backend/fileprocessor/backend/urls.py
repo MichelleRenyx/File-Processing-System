@@ -26,7 +26,6 @@ from api.views import ProcessDataView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', include('api.urls')),
     path('upload/', DocumentUploadView.as_view(), name='document-upload'),
     path('process-data/', ProcessDataView.as_view(), name='process-data'),
 ]

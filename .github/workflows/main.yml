@@ -71,5 +71,5 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fileprocessor:latest
             docker stop backend-fileprocessor || true
             docker rm backend-fileprocessor || true
-            docker run -d -name backend-fileprocessor -p 80:8000 ${{ secrets.DOCKER_USERNAME }}/backend-fileprocessor:latest
+            docker run -d --name backend-fileprocessor -p 80:8000 ${{ secrets.DOCKER_USERNAME }}/backend-fileprocessor:latest
           EOF

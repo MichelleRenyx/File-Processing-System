@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from openai import OpenAI
 from rest_framework import views, status
 from rest_framework.response import Response
@@ -117,3 +118,7 @@ class DownloadProcessedData(views.APIView):
             return Response({'url': response}, status=status.HTTP_200_OK)
         except ClientError as e:
             return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
+        
+
+def index(request):
+    return render(request, 'index.html')

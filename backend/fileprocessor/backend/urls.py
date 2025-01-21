@@ -15,9 +15,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
+# import settings
+from django.conf import settings
+from api.views import index
+from django.conf.urls.static import static
+from django.urls import path
+from api.views import DocumentUploadView
+from api.views import ProcessDataView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api.urls')),
+    path('upload/', DocumentUploadView.as_view(), name='document-upload'),
+    path('process-data/', ProcessDataView.as_view(), name='process-data'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns += [re_path(r'^(?:.*)/?$)', index, name = 'index')]

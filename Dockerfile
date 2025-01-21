@@ -24,6 +24,8 @@ WORKDIR /code
 
 #Copy Django project to the container
 COPY ./backend/fileprocessor/ /code/backend/fileprocessor/
+# Copy the .env file to the container
+COPY ./backend/fileprocessor/.env /code/backend/fileprocessor/.env
 
 RUN pip install -r ./backend/fileprocessor/requirements.txt
 

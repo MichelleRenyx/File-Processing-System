@@ -35,3 +35,4 @@ if settings.DEBUG:
 
 # urlpatterns += [re_path(r'^(?:.*)/?$)', index, name = 'index')]
 urlpatterns += [re_path(r'^(?:.*)/?$', index, name='index')]
+

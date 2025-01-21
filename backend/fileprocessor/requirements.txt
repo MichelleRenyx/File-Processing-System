@@ -16,3 +16,4 @@ html5lib
 boto3
 django-storages
 openai
+gunicorn

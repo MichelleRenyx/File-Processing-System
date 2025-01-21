@@ -36,6 +36,7 @@ COPY --from=build-stage /code/frontend/dist/index.html /code/backend/fileprocess
 ARG OPENAI_API_KEY
 ENV OPENAI_API_KEY=${OPENAI_API_KEY}
 
+
 #Run Django Migration Commands
 RUN python3 ./backend/fileprocessor/manage.py migrate
 

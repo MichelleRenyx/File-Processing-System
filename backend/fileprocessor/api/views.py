@@ -27,7 +27,21 @@ class DocumentUploadView(views.APIView):
 
             # Automatically determine file_type based on file extension
             if uploaded_file.name.endswith('.csv'):
-                df = pd.read_csv(uploaded_file)
+                uploaded_file.seek(0)  # Rewind file pointer to the beginning
+                content = uploaded_file.read(1000)  # Read the first 1000 bytes for debugging (optional)
+                print(content)  # Print the content to check if it's a valid CSV
+                uploaded_file.seek(0)  # Rewind file pointer to the beginning
+
+                # df = pd.read_csv(uploaded_file)
+                try:
+                    # Try using UTF-8 encoding to read
+                    df = pd.read_csv(uploaded_file, encoding='utf-8')
+                except UnicodeDecodeError:
+                    try:
+                        # If UTF-8 fails, try GBK encoding
+                        df = pd.read_csv(uploaded_file, encoding='gbk')
+                    except UnicodeDecodeError:
+                        return Response({'error': 'Unable to decode the CSV file. Unsupported encoding.'}, status=status.HTTP_400_BAD_REQUEST)
                 file_instance.file_type = 'csv'
             elif uploaded_file.name.endswith('.xlsx'):
                 df = pd.read_excel(uploaded_file)

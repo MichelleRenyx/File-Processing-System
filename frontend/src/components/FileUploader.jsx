@@ -6,8 +6,16 @@ import api from '../api';
 function FileUploader({ onFileUpload }) {
   const [file, setFile] = useState(null);
 
+  // const handleFileChange = (event) => {
+  //   setFile(event.target.files[0]);
+  // };
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file && (file.name.endsWith('.csv') || file.name.endsWith('.xlsx'))) {
+        setFile(file);
+    } else {
+        alert('Please upload a .csv or .xlsx file.');
+    }
   };
 
   const handleSubmit = async (event) => {

@@ -11,7 +11,7 @@ function FileUploader({ onFileUpload }) {
   // };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (file && (file.name.endsWith('.csv') || file.name.endsWith('.xlsx'))) {
+    if (file && (file.name.endsWith('.csv') || file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
         setFile(file);
     } else {
         alert('Please upload a .csv or .xlsx file.');

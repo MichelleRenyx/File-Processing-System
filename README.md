@@ -31,7 +31,7 @@ them with 'REDACTED'.") Click Button 'Process Data'.
 - **Backend:** Django, Python3.12, OpenAI API
 - **Frontend Interaction:** React, Javascript, Tailwind, CSS
 - **Deployment:** Docker, GitHub Actions for CI/CD, AWS EC2
-- **Tools:** Postman, AWS S3
+- **Tools:** Postman, AWS S3, Vite
 
 ## Installation
 ### Prerequisites
@@ -80,6 +80,8 @@ python3 manage.py runserver
 ### Step 3
 Enter the frontend directory, install dependencies and build frontend resources:
 ```bash
+# make sure you are in the (env)
+
 cd frontend
 
 npm install

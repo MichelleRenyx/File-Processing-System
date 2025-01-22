@@ -28,7 +28,7 @@ function FileUploader({ onFileUpload }) {
       onFileUpload(response.data);
     } catch (error) {
       console.error('Error uploading file:', error);
-      alert('Error uploading file');
+      alert('File type is not supported. Please upload a .xlsx/.csv file.');
     }
   };
 

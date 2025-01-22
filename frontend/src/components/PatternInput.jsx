@@ -19,7 +19,7 @@ function PatternInput({ fileData, onProcessData }) {
       onProcessData(response.data);
     } catch (error) {
       console.error('Error processing data:', error);
-      alert('Failed to process data');
+      alert('Failed to process data. Please check the internet connection or try again later');
     }
   };
 

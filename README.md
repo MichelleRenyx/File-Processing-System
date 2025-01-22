@@ -33,6 +33,7 @@ them with 'REDACTED'.") Click Button 'Process Data'.
 - File upload, preview and management through Django.
 - Integration with OpenAI API for advanced natural language processing.
 - RESTful API endpoints to interact with the frontend.
+- Use Tailwind and React for better frontend visual effects.
 - Set up Jest for Unit Test and use GitHub Actions for CI/CD.
 - Deployed using Docker, AWS EC2
 - Storage of static files in AWS S3.

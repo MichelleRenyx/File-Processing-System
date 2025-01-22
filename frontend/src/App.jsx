@@ -39,8 +39,7 @@ return (
     <p className="text-xl mb-8">
       Say goodbye to data chaos and hello to precision with our AI-powered data
       cleaning platform. 
-    </p>
-    <p className="text-lg text-yellow-100">
+
       Supported file type: .xlsx/.csv
     </p>
 

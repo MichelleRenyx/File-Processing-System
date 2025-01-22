@@ -1,8 +1,19 @@
 # Intelligent Form File Processor
-Visit the Deployed Version at: 
+**Author:** Yuxin Ren
+
+**Contact:** micheren1@outlook.com
+
+***Note: This project is still under development. You are only authorized to read and use it when you receive the link. Please do not share it with others. Thank you.***
+
+---
+**Visit the Deployed Version at:**
 
 http://ec2-3-27-59-112.ap-southeast-2.compute.amazonaws.com/
 - **IMPORTANT**: This version is only used to demonstrate the developed results and functions. Please DO NOT use it for large-scale testing to avoid overloading the external platform like OpenAI API and AWS EC2 and causing inaccurate results.
+
+**Demonstration Video:**
+
+
 ## Description
 This project is a file processing system developed with Django and React and hosted in Docker containers, using OpenAI's API for data processing, AWS S3 for static file storage and AWS EC2 for deployment. The system enables users to process uploaded .xlsx and .csv files by providing natural language input, and the processed files can be downloaded as .csv.
 

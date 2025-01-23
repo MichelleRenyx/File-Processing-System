@@ -3,13 +3,11 @@
 
 **Contact:** micheren1@outlook.com
 
-***Note: This project is still under development. You are only authorized to read and use it when you receive the link. Please do not share it with others. Thank you.***
-
 ---
 **Visit the Deployed Version at:**
 
 http://ec2-3-27-59-112.ap-southeast-2.compute.amazonaws.com/
-- **IMPORTANT**: This version is only used to demonstrate the developed results and functions. Please DO NOT use it for large-scale testing to avoid overloading the external platform like OpenAI API and AWS EC2 and causing inaccurate results.
+- **Note**: Due to the limitations of my personal OpenAI API and AWS EC2 accounts, the current setup is sufficient only for small scale testing purposes to demonstrates the core functionality of the application..
 
 **Demonstration Video:**
 
@@ -113,17 +111,3 @@ Then you are supposed to visit the Web with the guide of Vite.
 * **Improved Container/API Strategy:** The deployment version of this project currently employs a low-cost Open API strategy and a free EC2 tier. For future enterprise-level development, we need to consider strategies that are closer to production standards.
 
 * **Domain Name Binding:** The website is currently accessible through the AWS Instance's IPv4 DNS. In the future, it need to be bind to a private domain name for better commercialization.
-
-## Reference
-- Tech With Tim. "Django & React Web App Tutorial - Authentication, Databases, Deployment & More." YouTube, https://www.youtube.com/watch?v=c-QsfbznSXI.
-
-- CodeWithAamir. "React CSV Download." YouTube, https://www.youtube.com/watch?v=IPEqb_AJbAQ.
-
-- Super Coders. "Deploying Django and React on AWS with Docker and GitHub Actions CI CD Pipeline | Amazon Clone 16." YouTube, https://www.youtube.com/watch?v=QHCsaG9dLI4.
-
-- Stack Overflow. "Stylesheet not loaded because of MIME-type." https://stackoverflow.com/questions/48248832/stylesheet-not-loaded-because-of-mime-type.
-
-
-
-
----

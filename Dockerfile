@@ -28,7 +28,8 @@ COPY ./backend/fileprocessor/ /code/backend/fileprocessor/
 RUN pip install -r ./backend/fileprocessor/requirements.txt
 
 #Copy the frontend build to the container
-COPY --from=build-stage /code/frontend/dist/assets /code/backend/fileprocessor/static/assets/
+COPY --from=build-stage /code/frontend/dist /code/backend/fileprocessor/static/
+COPY --from=build-stage /code/frontend/dist/assets /code/backend/fileprocessor/static/
 COPY --from=build-stage /code/frontend/dist/index.html /code/backend/fileprocessor/backend/templates/index.html
 
 # Use ARG to pass the environment variable for OpenAI API key

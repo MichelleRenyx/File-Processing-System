@@ -4,14 +4,10 @@
 **Contact:** micheren1@outlook.com
 
 ---
-**Visit the Deployed Version at:**
-
-http://ec2-3-27-59-112.ap-southeast-2.compute.amazonaws.com/
+**Visit the Deployed Version at:** http://ec2-3-27-59-112.ap-southeast-2.compute.amazonaws.com/
 - **Note**: Due to the limitations of my personal OpenAI API and AWS EC2 accounts, the current setup is sufficient only for small scale testing purposes to demonstrates the core functionality of the application..
 
-**Demonstration Video:**
-
-https://youtu.be/2n-eY0MsGiA
+**Demonstration Video:** https://youtu.be/2n-eY0MsGiA
 
 ## Description
 This project is a file processing system developed with Django and React and hosted in Docker containers, using OpenAI's API for data processing, AWS S3 for static file storage and AWS EC2 for deployment. The system enables users to process uploaded .xlsx and .csv files by providing natural language input, and the processed files can be downloaded as .csv.

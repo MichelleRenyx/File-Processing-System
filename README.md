@@ -5,7 +5,7 @@
 
 ---
 **Visit the Deployed Version at:** http://ec2-3-27-59-112.ap-southeast-2.compute.amazonaws.com/
-- **Note**: Due to the limitations of my personal OpenAI API and AWS EC2 accounts, the current setup is sufficient only for small scale testing purposes to demonstrates the core functionality of the application..
+- **Note**: Due to the limitations of my personal OpenAI API and AWS EC2 accounts, the current setup is sufficient only for small scale testing purposes to demonstrates the core functionality of the application.
 
 **Demonstration Video:** https://youtu.be/2n-eY0MsGiA
 

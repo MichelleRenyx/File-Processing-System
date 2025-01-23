@@ -99,7 +99,7 @@ npm install
 
 npm run dev
 ```
-Then you are supposed to visit the Web with the guide of Vite.
+Then you will be able to visit the Web with http://localhost:5173/
 
 ## Future Improvements
 * **Handling Large Files:** To manage large file uploads better, we're considering using load balancers like Nginx. This would help spread upload requests across several servers. We also want to use techniques like streaming and chunking to keep memory use low and avoid server crashes.

@@ -53,7 +53,7 @@ jobs:
           export AWS_STORAGE_BUCKET_NAME=${{ secrets.AWS_STORAGE_BUCKET_NAME }}
           export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
           export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          docker build --build-arg OPENAI_API_KEY=$OPENAI_API_KEY --build-arg AWS_STORAGE_BUCKET_NAME=$AWS_STORAGE_BUCKET_NAME --build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -t ${{ secrets.DOCKER_USERNAME }}/backend-fileprocessor:latest .
+          docker build --build-arg OPENAI_API_KEY=$OPENAI_API_KEY --build-arg AWS_STORAGE_BUCKET_NAME=$AWS_STORAGE_BUCKET_NAME --build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --no-cache -t ${{ secrets.DOCKER_USERNAME }}/backend-fileprocessor:latest .
 
       - name: Build and push Docker image
         run: |
@@ -73,6 +73,5 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fileprocessor:latest
             docker stop backend-fileprocessor || true
             docker rm backend-fileprocessor || true
-            # docker run -d --name backend-fileprocessor -p 80:8000 -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} ${{ secrets.DOCKER_USERNAME }}/backend-fileprocessor:latest
             docker run -d --name backend-fileprocessor -p 80:8000 -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} -e AWS_STORAGE_BUCKET_NAME=${{ secrets.AWS_STORAGE_BUCKET_NAME }} -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} ${{ secrets.DOCKER_USERNAME }}/backend-fileprocessor:latest
           EOF
